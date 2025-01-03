@@ -26,7 +26,6 @@
 
 - (instancetype)initWithImageSource:(CGImageSourceRef)imageSource index:(NSUInteger)index {
     NSParameterAssert(imageSource);
-    NSParameterAssert(index < CGImageSourceGetCount(imageSource));
     if (self = [super init]) {
         if (index >= CGImageSourceGetCount(imageSource)) {
             return nil;

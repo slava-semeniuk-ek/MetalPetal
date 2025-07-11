@@ -273,6 +273,13 @@ static MTIAlphaType MTIPreferredAlphaTypeForCGImage(CGImageRef cgImage) {
 }
 
 - (instancetype)initWithContentsOfURL:(NSURL *)URL loadingOptions:(MTICGImageLoadingOptions *)options isOpaque:(BOOL)isOpaque {
+    return [self initWithContentsOfURL: URL loadingOptions: options isOpaque: isOpaque cachePolicy: MTIImageCachePolicyPersistent];
+}
+
+- (instancetype)initWithContentsOfURL:(NSURL *)URL
+                       loadingOptions:(MTICGImageLoadingOptions *)options
+                             isOpaque:(BOOL)isOpaque
+                          cachePolicy:(MTIImageCachePolicy)cachePolicy {
     MTIImageProperties *properties = [[MTIImageProperties alloc] initWithImageAtURL:URL];
     if (!properties) {
         return nil;
@@ -289,7 +296,7 @@ static MTIAlphaType MTIPreferredAlphaTypeForCGImage(CGImageRef cgImage) {
     @MTI_DEFER {
         CGImageRelease(cgImage);
     };
-    return [self initWithPromise:[[MTICGImagePromise alloc] initWithCGImage:cgImage orientation:properties.orientation options:options isOpaque:isOpaque] samplerDescriptor:MTISamplerDescriptor.defaultSamplerDescriptor cachePolicy:MTIImageCachePolicyPersistent];
+    return [self initWithPromise:[[MTICGImagePromise alloc] initWithCGImage:cgImage orientation:properties.orientation options:options isOpaque:isOpaque] samplerDescriptor:MTISamplerDescriptor.defaultSamplerDescriptor cachePolicy:cachePolicy];
 }
 
 - (instancetype)initWithColor:(MTIColor)color sRGB:(BOOL)sRGB size:(CGSize)size {

@@ -17,9 +17,14 @@ extension MTIImage {
     public convenience init(cgImage: CGImage, orientation: CGImagePropertyOrientation = .up, options: MTICGImageLoadingOptions = .default, isOpaque: Bool = false) {
         self.init(__cgImage: cgImage, orientation: orientation, loadingOptions: options, isOpaque: isOpaque)
     }
-    
-    public convenience init?(contentsOf url: URL, options: MTICGImageLoadingOptions = .default, isOpaque: Bool = false) {
-        self.init(__contentsOf: url, loadingOptions: options, isOpaque: isOpaque)
+
+    public convenience init?(
+        contentsOf url: URL,
+        options: MTICGImageLoadingOptions = .default,
+        isOpaque: Bool = false,
+        cachePolicy: MTIImage.CachePolicy = .persistent
+    ) {
+        self.init(__contentsOf: url, loadingOptions: options, isOpaque: isOpaque, cachePolicy: cachePolicy)
     }
     
     @available(*, deprecated, message: "Use init?(contentsOf:options:isOpaque:) instead.")

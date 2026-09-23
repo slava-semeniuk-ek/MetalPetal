@@ -175,11 +175,26 @@
     }
 }
 
+// MTKView does not keep its drawable in sync with `bounds * contentScaleFactor` while an ancestor is transformed (rotated or zoomed scroll view), which stretches the rendered image.
+- (void)updateDrawableSize {
+    MTKView *renderView = _renderView;
+    [renderView layoutIfNeeded];
+    CGSize expectedSize = CGSizeMake(round(CGRectGetWidth(renderView.bounds) * renderView.contentScaleFactor),
+                                     round(CGRectGetHeight(renderView.bounds) * renderView.contentScaleFactor));
+    if (expectedSize.width <= 0 || expectedSize.height <= 0) {
+        return;
+    }
+    if (!CGSizeEqualToSize(renderView.drawableSize, expectedSize)) {
+        renderView.drawableSize = expectedSize;
+    }
+}
+
 - (void)setImage:(MTIImage *)image {
     NSAssert(NSThread.isMainThread, @"-[MTIImageView setImage:] can only be called on main thread.");
     if (_image != image) {
         _image = image;
         [self updateContentScaleFactor];
+        [self updateDrawableSize];
         [self setNeedsRedraw];
     }
 }
@@ -187,6 +202,7 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     [self updateContentScaleFactor];
+    [self updateDrawableSize];
     [self setNeedsRedraw];
 }
 
